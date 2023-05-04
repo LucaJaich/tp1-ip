@@ -36,6 +36,9 @@ likesDePublicacion (_, _, us) = us
 
 -- Ejercicios
 
+
+----------------- EJ 1 ------------------------
+
 existeEnLista :: String -> [String] -> Bool -- Tambien hacerlo genérico
 existeEnLista _ [] = False
 existeEnLista n (x:xs) | n == x = True
@@ -44,18 +47,43 @@ existeEnLista n (x:xs) | n == x = True
 sinRepetidos :: [String] -> [String] -- TODO! Como lo hago generico?
 sinRepetidos [] = []
 sinRepetidos (x:xs) | existeEnLista x xs = (sinRepetidos xs)
-                    | otherwise = [x] ++ (sinRepetidos xs)
+                    | otherwise = x : (sinRepetidos xs)
 
+listaDeNombres :: [Usuario] -> [String]
+listaDeNombres [] = []
+listaDeNombres (u:us) = (nombreDeUsuario u) : (listaDeNombres us) 
+
+-- describir qué hace la función: .....
 nombresDeUsuarios :: RedSocial -> [String]
-nombresDeUsuarios (_, _, us) = ["a"]
+nombresDeUsuarios rs = sinRepetidos (listaDeNombres (usuarios rs))
+
+-----------------------------------------------
+----------------- EJ 2 ------------------------
+
+encontrarRelaciones :: [Relacion] -> Usuario -> [Usuario]
+encontrarRelaciones [] _ = []
+encontrarRelaciones (r:rs) u | u == fst r = (snd r) : (encontrarRelaciones rs u)
+                             | u == snd r = (fst r) : (encontrarRelaciones rs u)
+                             | otherwise = encontrarRelaciones rs u
 
 -- describir qué hace la función: .....
 amigosDe :: RedSocial -> Usuario -> [Usuario]
-amigosDe = undefined
+amigosDe rs u = encontrarRelaciones (relaciones rs) u
+
+-----------------------------------------------
+----------------- EJ 3 ------------------------
+
+largoDe :: [t] -> Int
+largoDe [] = 0
+largoDe (x:xs) = 1 + largoDe xs
 
 -- describir qué hace la función: .....
 cantidadDeAmigos :: RedSocial -> Usuario -> Int
-cantidadDeAmigos = undefined
+cantidadDeAmigos rs u = largoDe (amigosDe rs u)
+
+-----------------------------------------------
+
+listaDeCantidadesDeAmigos :: [Relacion] -> [Int]
 
 -- describir qué hace la función: .....
 usuarioConMasAmigos :: RedSocial -> Usuario
