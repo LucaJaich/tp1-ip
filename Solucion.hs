@@ -6,6 +6,9 @@
 -- Integrante 3: Nombre Apellido, email, LU
 -- Integrante 4: Nombre Apellido, email, LU
 
+
+module Solucion where
+
 type Usuario = (Integer, String) -- (id, nombre)
 type Relacion = (Usuario, Usuario) -- usuarios que se relacionan
 type Publicacion = (Usuario, String, [Usuario]) -- (usuario que publica, texto publicacion, likes)
@@ -82,12 +85,26 @@ cantidadDeAmigos :: RedSocial -> Usuario -> Int
 cantidadDeAmigos rs u = largoDe (amigosDe rs u)
 
 -----------------------------------------------
+----------------- Ej 4 ------------------------
 
-listaDeCantidadesDeAmigos :: [Relacion] -> [Int]
+listaDeCantidadDeAmigos :: RedSocial -> [Usuario] -> [Int]
+listaDeCantidadDeAmigos _ [] = []
+listaDeCantidadDeAmigos rs (u:us) = (cantidadDeAmigos rs u) : (listaDeCantidadDeAmigos rs us)
+
+mayorEnLista :: Int -> [Int] -> Bool
+mayorEnLista _ [] = True
+mayorEnLista x (y:ys) | x < y = False
+                      | otherwise = mayorEnLista x ys
+
+mayorEnListaConUsuarios :: [Usuario] -> [Int] -> Usuario
+mayorEnListaConUsuarios (u:[]) (x:[]) = u
+mayorEnListaConUsuarios (u:us) (x:xs) | mayorEnLista x xs = u
+                                      | otherwise = mayorEnListaConUsuarios us xs
 
 -- describir qué hace la función: .....
 usuarioConMasAmigos :: RedSocial -> Usuario
-usuarioConMasAmigos = undefined
+usuarioConMasAmigos rs = mayorEnListaConUsuarios usuariosDeRed (listaDeCantidadDeAmigos rs usuariosDeRed)
+                         where usuariosDeRed = usuarios rs
 
 -- describir qué hace la función: .....
 estaRobertoCarlos :: RedSocial -> Bool
@@ -97,7 +114,7 @@ estaRobertoCarlos = undefined
 publicacionesDe :: RedSocial -> Usuario -> [Publicacion]
 publicacionesDe = undefined
 
--- describir qué hace la función: .....
+-- describir qué hace la función:    .....
 publicacionesQueLeGustanA :: RedSocial -> Usuario -> [Publicacion]
 publicacionesQueLeGustanA = undefined
 
