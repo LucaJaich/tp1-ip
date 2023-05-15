@@ -11,11 +11,15 @@ testSuiteEj1 = test [
     "nombresDeUsuarios 3 (comun)" ~: (nombresDeUsuarios redA) ~?= ["Juli", "Santi", "Luca", "Diego"],
     "nombresDeUsuarios 4 (repetidos)" ~: (nombresDeUsuarios redRepetidos) ~?= ["Juli", "Santi", "Luca", "Diego"],
 
-    "amigosDe 1 (vacio)" ~: (amigosDe redVacia usuario1) ~?= [],
+    "amigosDe 1 (sin relaciones)" ~: (amigosDe redSinRelaciones usuario1) ~?= [],
     "amigosDe 2 (relaciones de un lado)" ~: (amigosDe redAmigosDe2 usuario1) ~?= [usuario2, usuario3, usuario4],
     "amigosDe 3 (relaciones del otro lado)" ~: (amigosDe redAmigosDe3 usuario1) ~?= [usuario2, usuario3, usuario4],
     "amigosDe 4 (no hay relaciones)" ~: (amigosDe redAmigosDe4 usuario1) ~?= [],
-    "amigosDe 5 (comun, lados variados)" ~: (amigosDe redA usuario2) ~?= [usuario1, usuario4]
+    "amigosDe 5 (comun, lados variados)" ~: (amigosDe redA usuario2) ~?= [usuario1, usuario4],
+
+    "cantidadDeAmigos 1 (sin relaciones)" ~: (cantidadDeAmigos redSinRelaciones usuario1) ~?= 0,
+    "cantidadDeAmigos (no hay relaciones de usuario)" ~: (cantidadDeAmigos redAmigosDe4 usuario1) ~?= 0,
+    "cantidadDeAmigos 3 (comun)" ~: (cantidadDeAmigos redA usuario3) ~?= 2
     ]
 
 
