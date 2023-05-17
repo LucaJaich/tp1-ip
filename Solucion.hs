@@ -151,7 +151,22 @@ tieneUnSeguidorFiel :: RedSocial -> Usuario -> Bool
 tieneUnSeguidorFiel rs u | largoDe ps < 0 = False
                          | otherwise = tieneUnSeguidorFiel2 ps 
 
+-----------------------------------------------
+----------------- Ej 10 ------------------------
+
+pertenece :: (Eq t) => t -> [t] -> Bool
+pertenece _ [] = False
+pertenece n (x:xs) | n == x = True
+                   | otherwise = pertenece n xs
+
+analizarAmigos :: RedSocial -> [Usuario] -> Usuario -> [Usuario] -> Bool
+analizarAmigos _ [] _ _ = False
+analizarAmigos rs (amigo:amigos) uObj usVistos | pertenece amigo usVistos = analizarAmigos rs amigos uObj usVistos
+                                               | amigo == uObj = True
+                                               | otherwise = (analizarAmigos rs (amigosDe rs amigo) uObj nuevosUs) 
+                                                 || (analizarAmigos rs amigos uObj nuevosUs)
+                                                 where nuevosUs = amigo : usVistos
 
 -- describir qué hace la función: .....
 existeSecuenciaDeAmigos :: RedSocial -> Usuario -> Usuario -> Bool
-existeSecuenciaDeAmigos = undefined
+existeSecuenciaDeAmigos rs u1 u2 = analizarAmigos rs (amigosDe rs u1) u2 []
