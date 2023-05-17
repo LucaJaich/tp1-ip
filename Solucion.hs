@@ -42,14 +42,14 @@ likesDePublicacion (_, _, us) = us
 
 ----------------- EJ 1 ------------------------
 
-existeEnLista :: String -> [String] -> Bool -- Tambien hacerlo genérico
-existeEnLista _ [] = False
-existeEnLista n (x:xs) | n == x = True
-                       | otherwise = existeEnLista n xs
+pertenece :: (Eq t) => t -> [t] -> Bool
+pertenece _ [] = False
+pertenece n (x:xs) | n == x = True
+                   | otherwise = pertenece n xs
 
-sinRepetidos :: [String] -> [String] -- TODO! Como lo hago generico?
+sinRepetidos :: (Eq t) => [t] -> [t]
 sinRepetidos [] = []
-sinRepetidos (x:xs) | existeEnLista x xs = (sinRepetidos xs)
+sinRepetidos (x:xs) | pertenece x xs = (sinRepetidos xs)
                     | otherwise = x : (sinRepetidos xs)
 
 listaDeNombres :: [Usuario] -> [String]
@@ -87,44 +87,70 @@ cantidadDeAmigos rs u = largoDe (amigosDe rs u)
 -----------------------------------------------
 ----------------- Ej 4 ------------------------
 
-listaDeCantidadDeAmigos :: RedSocial -> [Usuario] -> [Int]
-listaDeCantidadDeAmigos _ [] = []
-listaDeCantidadDeAmigos rs (u:us) = (cantidadDeAmigos rs u) : (listaDeCantidadDeAmigos rs us)
+--masAmigos recibe una red social y una lista con los usuarios de esa red social y nos devuelve quien tiene mas amigos
+masAmigos :: RedSocial -> [Usuario] -> Usuario
+masAmigos rs (x:xs) | xs == [] = x
+                    | cantidadDeAmigos rs x > cantidadDeAmigos rs (masAmigos rs xs) = x
+                    | otherwise = masAmigos rs xs
 
-mayorEnLista :: Int -> [Int] -> Bool
-mayorEnLista _ [] = True
-mayorEnLista x (y:ys) | x < y = False
-                      | otherwise = mayorEnLista x ys
-
-mayorEnListaConUsuarios :: [Usuario] -> [Int] -> Usuario
-mayorEnListaConUsuarios (u:[]) (x:[]) = u
-mayorEnListaConUsuarios (u:us) (x:xs) | mayorEnLista x xs = u
-                                      | otherwise = mayorEnListaConUsuarios us xs
-
--- describir qué hace la función: .....
+-- describir qué hace la función: recibe una red social y nos dice quien es el usuario que tiene mas amigos
 usuarioConMasAmigos :: RedSocial -> Usuario
-usuarioConMasAmigos rs = mayorEnListaConUsuarios usuariosDeRed (listaDeCantidadDeAmigos rs usuariosDeRed)
-                         where usuariosDeRed = usuarios rs
+usuarioConMasAmigos rs = masAmigos rs (usuarios rs)
+
+-----------------------------------------------
+----------------- Ej 5 ------------------------
 
 -- describir qué hace la función: .....
 estaRobertoCarlos :: RedSocial -> Bool
-estaRobertoCarlos = undefined
+estaRobertoCarlos rs | cantidadDeAmigos rs (usuarioConMasAmigos rs) > 10 = True
+                     | otherwise = False
+
+-----------------------------------------------
+----------------- Ej 6 ------------------------
+
+publicacionesPorUsuario :: [Publicacion] -> Usuario -> [Publicacion]
+publicacionesPorUsuario [] _ = []
+publicacionesPorUsuario (p:ps) u | (usuarioDePublicacion p) == u = p : publicacionesPorUsuario ps u
+                                 | otherwise = publicacionesPorUsuario ps u
 
 -- describir qué hace la función: .....
 publicacionesDe :: RedSocial -> Usuario -> [Publicacion]
-publicacionesDe = undefined
+publicacionesDe rs u = publicacionesPorUsuario (publicaciones rs) u
+
+-----------------------------------------------
+----------------- Ej 7 ------------------------
+
+publicacionesQueLeGustanA2 :: [Publicacion] -> Usuario -> [Publicacion]
+publicacionesQueLeGustanA2 [] _ = []
+publicacionesQueLeGustanA2 (p:ps) u | pertenece u (likesDePublicacion p) = p : publicacionesQueLeGustanA2 ps u
+                                    | otherwise = publicacionesQueLeGustanA2 ps u
 
 -- describir qué hace la función:    .....
 publicacionesQueLeGustanA :: RedSocial -> Usuario -> [Publicacion]
-publicacionesQueLeGustanA = undefined
+publicacionesQueLeGustanA rs u = publicacionesQueLeGustanA2 (publicaciones rs) u
+
+-----------------------------------------------
+----------------- Ej 8 ------------------------
+
+todosPertenecen :: (Eq t) => [t] -> [t] -> Bool
+todosPertenecen [] _ = True
+todosPertenecen (x:xs) ys | pertenece x ys = todosPertenecen xs ys
+                          | otherwise = False
 
 -- describir qué hace la función: .....
 lesGustanLasMismasPublicaciones :: RedSocial -> Usuario -> Usuario -> Bool
-lesGustanLasMismasPublicaciones = undefined
+lesGustanLasMismasPublicaciones rs u1 u2 = (todosPertenecen pubsU1 pubsU2) && (todosPertenecen pubsU2 pubsU1)
+                                where pubsU1 = publicacionesQueLeGustanA rs u1 
+                                      pubsU2 = publicacionesQueLeGustanA rs u2 
+
+-----------------------------------------------
+----------------- Ej 9 ------------------------
 
 -- describir qué hace la función: .....
 tieneUnSeguidorFiel :: RedSocial -> Usuario -> Bool
-tieneUnSeguidorFiel = undefined
+tieneUnSeguidorFiel rs u | largoDe ps < 0 = False
+                         | otherwise = tieneUnSeguidorFiel2 ps 
+
 
 -- describir qué hace la función: .....
 existeSecuenciaDeAmigos :: RedSocial -> Usuario -> Usuario -> Bool
