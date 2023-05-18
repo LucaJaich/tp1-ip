@@ -146,18 +146,13 @@ lesGustanLasMismasPublicaciones rs u1 u2 = (todosPertenecen pubsU1 pubsU2) && (t
 -----------------------------------------------
 ----------------- Ej 9 ------------------------
 
--- describir qué hace la función: .....
-tieneUnSeguidorFiel :: RedSocial -> Usuario -> Bool
-tieneUnSeguidorFiel rs u | largoDe ps < 0 = False
-                         | otherwise = tieneUnSeguidorFiel2 ps 
+-- -- describir qué hace la función: .....
+-- tieneUnSeguidorFiel :: RedSocial -> Usuario -> Bool
+-- tieneUnSeguidorFiel rs u | largoDe ps < 0 = False
+--                          | otherwise = tieneUnSeguidorFiel2 ps 
 
 -----------------------------------------------
 ----------------- Ej 10 ------------------------
-
-pertenece :: (Eq t) => t -> [t] -> Bool
-pertenece _ [] = False
-pertenece n (x:xs) | n == x = True
-                   | otherwise = pertenece n xs
 
 analizarAmigos :: RedSocial -> [Usuario] -> Usuario -> [Usuario] -> Bool
 analizarAmigos _ [] _ _ = False
