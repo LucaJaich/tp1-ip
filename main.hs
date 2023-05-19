@@ -17,6 +17,7 @@ allTests = test [
  ]
 
 -- Los nombres de las redes o son autoexplicativos o tienen el nombre del ejercicio + el nro test
+-- Ejemplo: "nombreDeEj nroDeTest (contexto)" ~: (nombreDeFuncion parametros) ~?= resultadoEsperado
 
 testSuiteEj1 = test [
     "nombresDeUsuarios 1 (red sin usuarios)" ~: (nombresDeUsuarios redVacia) ~?= [],
