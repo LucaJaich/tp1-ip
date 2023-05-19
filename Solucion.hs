@@ -1,10 +1,10 @@
 -- Completar con los datos del grupo
 --
--- Nombre de Grupo: xx
--- Integrante 1: Nombre Apellido, email, LU
--- Integrante 2: Nombre Apellido, email, LU
--- Integrante 3: Nombre Apellido, email, LU
--- Integrante 4: Nombre Apellido, email, LU
+-- Nombre de Grupo: Esternocleidomastoideo
+-- Integrante 1: Luca Jaichenco, jaichencol@gmail.com, 591/22
+-- Integrante 2: Julieta Cavalieri, julieta_cavalieri@yahoo.com, 1816/21
+-- Integrante 3: Santiago Bassani, santiagobassani2000@gmail.com, 211/23
+-- Integrante 4: Diego Lima Zecconi, diego.lima.zecconi@gmail.com, 839/22
 
 
 module Solucion where
@@ -102,7 +102,8 @@ usuarioConMasAmigos rs = masAmigos rs (usuarios rs)
 
 -- describir qué hace la función: Devuelve True si el usuario con mas amigos tiene mas de 10 amigos 
 estaRobertoCarlos :: RedSocial -> Bool
-estaRobertoCarlos rs | cantidadDeAmigos rs (usuarioConMasAmigos rs) > 10 = True
+estaRobertoCarlos rs | usuarios rs == [] = False
+                     | cantidadDeAmigos rs (usuarioConMasAmigos rs) > 10 = True
                      | otherwise = False
 
 -----------------------------------------------
@@ -127,7 +128,7 @@ publicacionesQueLeGustanA2 (p:ps) u | pertenece u (likesDePublicacion p) = p : p
 
 -- describir qué hace la función: Devuelve una lista con las publicaciones que le gustan a un usuario
 publicacionesQueLeGustanA :: RedSocial -> Usuario -> [Publicacion]
-publicacionesQueLeGustanA rs u = publicacionesQueLeGustanA2 (publicaciones rs) u
+publicacionesQueLeGustanA rs u = sinRepetidos (publicacionesQueLeGustanA2 (publicaciones rs) u)
 
 -----------------------------------------------
 ----------------- Ej 8 ------------------------
@@ -176,5 +177,5 @@ analizarAmigos rs (amigo:amigos) uObj usVistos | pertenece amigo usVistos = anal
 -- describir qué hace la función: Devuelve True si existe una secuencia de amigos que conecte a dos usuarios, 
 --                                la secuencia tiene que tener al menos 2 relaciones
 existeSecuenciaDeAmigos :: RedSocial -> Usuario -> Usuario -> Bool
-existeSecuenciaDeAmigos rs u1 u2 | pertenece u2 (amigosDe rs u1) = False
+existeSecuenciaDeAmigos rs u1 u2 | (u1 == u2) && ((cantidadDeAmigos rs u1) > 0) = True
                                  | otherwise = analizarAmigos rs (amigosDe rs u1) u2 []
