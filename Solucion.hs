@@ -146,10 +146,22 @@ lesGustanLasMismasPublicaciones rs u1 u2 = (todosPertenecen pubsU1 pubsU2) && (t
 -----------------------------------------------
 ----------------- Ej 9 ------------------------
 
--- -- describir qué hace la función: .....
--- tieneUnSeguidorFiel :: RedSocial -> Usuario -> Bool
--- tieneUnSeguidorFiel rs u | largoDe ps < 0 = False
---                          | otherwise = tieneUnSeguidorFiel2 ps 
+leGustanTodas :: Usuario -> [Publicacion] -> Bool
+leGustanTodas u [] = True
+leGustanTodas u (p:ps) = pertenece u (likesDePublicacion p) && leGustanTodas u ps
+
+
+
+
+esAlgunoSeguidorFiel :: RedSocial -> [Usuario] -> Usuario -> Bool
+esAlgunoSeguidorFiel _ [] _ = False
+esAlgunoSeguidorFiel rs (u:us) u1 | (leGustanTodas u (publicacionesDe rs u1)) && (u /= u1) = True
+                                  | otherwise = esAlgunoSeguidorFiel rs us u1
+
+-- describir qué hace la función: .....
+tieneUnSeguidorFiel :: RedSocial -> Usuario -> Bool
+tieneUnSeguidorFiel rs u | largoDe (publicacionesDe rs u) < 1 = False
+                         | otherwise = esAlgunoSeguidorFiel rs (usuarios rs) u
 
 -----------------------------------------------
 ----------------- Ej 10 ------------------------
@@ -164,4 +176,5 @@ analizarAmigos rs (amigo:amigos) uObj usVistos | pertenece amigo usVistos = anal
 
 -- describir qué hace la función: .....
 existeSecuenciaDeAmigos :: RedSocial -> Usuario -> Usuario -> Bool
-existeSecuenciaDeAmigos rs u1 u2 = analizarAmigos rs (amigosDe rs u1) u2 []
+existeSecuenciaDeAmigos rs u1 u2 | pertenece u2 (amigosDe rs u1) = False
+                                 | otherwise = analizarAmigos rs (amigosDe rs u1) u2 []
