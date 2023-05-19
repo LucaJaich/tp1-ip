@@ -1,14 +1,7 @@
--- TODO: 
---       - PREGUNTAR POR REPETIDOS EN LOS TESTS
---       - ARREGLAR LO DE USUARIOSA Y USUARIO5
---       - Arreglar Naming de las redes (numeros)
-
-module Main where
-
 import Test.HUnit
 import Solucion
 
-run = runTestTT allTests
+main = runTestTT allTests
 
 allTests = test [
     "Ej 1" ~: testSuiteEj1,
@@ -24,14 +17,14 @@ allTests = test [
  ]
 
 testSuiteEj1 = test [
-    "nombresDeUsuarios 1 (sin usuarios)" ~: (nombresDeUsuarios redVacia) ~?= [],
+    "nombresDeUsuarios 1 (red sin usuarios)" ~: (nombresDeUsuarios redVacia) ~?= [],
     "nombresDeUsuarios 2 (1 usuario)" ~: (nombresDeUsuarios redUnUsuario) ~?= ["Juli"],
-    "nombresDeUsuarios 3 (comun)" ~: (nombresDeUsuarios redA) ~?= ["Juli", "Santi", "Luca", "Diego"],
-    "nombresDeUsuarios 4 (repetidos)" ~: (nombresDeUsuarios redRepetidos) ~?= ["Juli", "Santi", "Luca", "Diego"]
+    "nombresDeUsuarios 3 (sin repetidos)" ~: (nombresDeUsuarios redSinRepetidos) ~?= ["Juli", "Santi", "Luca", "Diego"],
+    "nombresDeUsuarios 4 (comun, repetidos)" ~: (nombresDeUsuarios redA) ~?= ["Juli", "Santi", "Luca", "Diego"]
  ]
 
 testSuiteEj2 = test [
-    "amigosDe 1 (sin relaciones)" ~: (amigosDe redSinRelaciones usuario1) ~?= [],
+    "amigosDe 1 (red sin relaciones)" ~: (amigosDe redSinRelaciones usuario1) ~?= [],
     "amigosDe 2 (relaciones de un lado)" ~: (amigosDe redAmigosDe2 usuario1) ~?= [usuario2, usuario3, usuario4],
     "amigosDe 3 (relaciones del otro lado)" ~: (amigosDe redAmigosDe3 usuario1) ~?= [usuario2, usuario3, usuario4],
     "amigosDe 4 (no hay relaciones)" ~: (amigosDe redAmigosDe4 usuario1) ~?= [],
@@ -40,7 +33,7 @@ testSuiteEj2 = test [
  ]
 
 testSuiteEj3 = test [
-    "cantidadDeAmigos 1 (sin relaciones)" ~: (cantidadDeAmigos redSinRelaciones usuario1) ~?= 0,
+    "cantidadDeAmigos 1 (red sin relaciones)" ~: (cantidadDeAmigos redSinRelaciones usuario1) ~?= 0,
     "cantidadDeAmigos (no hay relaciones de usuario)" ~: (cantidadDeAmigos redAmigosDe4 usuario1) ~?= 0,
     "cantidadDeAmigos 3 (comun)" ~: (cantidadDeAmigos redA usuario3) ~?= 2
  ]
@@ -48,7 +41,7 @@ testSuiteEj3 = test [
 testSuiteEj4 = test [
     "usuarioConMasAmigos 1 (sin relaciones)" ~: expectAny (usuarioConMasAmigos redSinRelaciones) usuariosA,
     "usuarioConMasAmigos 2 (comun)" ~: (usuarioConMasAmigos redUsuarioConMasAmigos2) ~?= usuario2,
-    "usuarioConMasAmigos 3 (misma cantidad)" ~: expectAny (usuarioConMasAmigos redUsuarioConMasAmigos3) [usuario1, usuario2]
+    "usuarioConMasAmigos 3 (misma cantida de amigos)" ~: expectAny (usuarioConMasAmigos redUsuarioConMasAmigos3) [usuario1, usuario2]
  ]
 
 testSuiteEj5 = test [
@@ -62,21 +55,21 @@ testSuiteEj5 = test [
 
 testSuiteEj6 = test [
     "publicacionesDe 1 (red sin publicaciones)" ~: (publicacionesDe redSinPublicaciones usuario1) ~?= [],
-    "publicacionesDe 2 (usuario sin publicaciones)" ~: (publicacionesDe redPublicacionesDe1 usuario1) ~?= [],
-    "publicacionesDe 3 (usuario con publicaciones)" ~: (publicacionesDe redPublicacionesDe2 usuario2) ~?= [publicacion2_1, publicacion2_2],
-    "publicacionesDe 4 (2 usuarios con misma pub y likes)" ~: (publicacionesDe redPublicacionesDe3 usuario2) ~?= [publicacion_igual, publicacion2_2]
+    "publicacionesDe 2 (usuario sin publicaciones)" ~: (publicacionesDe redPublicacionesDe2 usuario1) ~?= [],
+    "publicacionesDe 3 (usuario con publicaciones)" ~: (publicacionesDe redPublicacionesDe3 usuario2) ~?= [publicacion2_1, publicacion2_2],
+    "publicacionesDe 4 (2 usuarios con misma pub y likes)" ~: (publicacionesDe redPublicacionesDe4 usuario2) ~?= [publicacion_igual, publicacion2_2]
  ]
 
 testSuiteEj7 = test [
     "publicacionesQueLeGustanA 1 (red sin publicaciones)" ~: (publicacionesQueLeGustanA redSinPublicaciones usuario1) ~?= [],
-    "publicacionesQueLeGustanA 2 (usuario sin likes)" ~: (publicacionesQueLeGustanA redPublicacionesQueLeGustanA1 usuario1) ~?= [],
-    "publicacionesQueLeGustanA 3 (usuario con likes)" ~: (publicacionesQueLeGustanA redPublicacionesQueLeGustanAComun usuario2) ~?= [publicacion1_1, publicacion3_4],
+    "publicacionesQueLeGustanA 2 (usuario sin likes)" ~: (publicacionesQueLeGustanA redLeGustanA2 usuario1) ~?= [],
+    "publicacionesQueLeGustanA 3 (usuario con likes)" ~: (publicacionesQueLeGustanA redLeGustanA3 usuario2) ~?= [publicacion1_1, publicacion3_4],
     "publicacionesQueLeGustanA 4 (publicaciones sin likes)" ~: (publicacionesQueLeGustanA redPublicacionesSinLikes usuario1) ~?= []
  ]
  
 testSuiteEj8 = test [
     "lesGustanLasMismasPublicaciones 1 (red sin publicaciones)" ~: (lesGustanLasMismasPublicaciones redSinPublicaciones usuario1 usuario2) ~?= True,
-    "lesGustanLasMismasPublicaciones 2 (usuario1 y usuario2 sin likes)" ~: (lesGustanLasMismasPublicaciones redLesGustanLasMismasPublicaciones1 usuario1 usuario2) ~?= True,
+    "lesGustanLasMismasPublicaciones 2 (usuario1 y usuario2 sin likes)" ~: (lesGustanLasMismasPublicaciones redLesGustanLasMismasPublicaciones2 usuario1 usuario2) ~?= True,
     "lesGustanLasMismasPublicaciones 3 (compara mismo usuario)" ~: (lesGustanLasMismasPublicaciones redLesGustanLasMismasPublicaciones3 usuario1 usuario1) ~?= True,
     "lesGustanLasMismasPublicaciones 4 (comun, verdadero)" ~: (lesGustanLasMismasPublicaciones redLesGustanLasMismasPublicaciones4 usuario3 usuario4) ~?= True,
     "lesGustanLasMismasPublicaciones 5 (comun, falso)" ~: (lesGustanLasMismasPublicaciones redLesGustanLasMismasPublicaciones5 usuario3 usuario4) ~?= False,
@@ -104,23 +97,8 @@ testSuiteEj10 = test [
 
 expectAny actual expected = elem actual expected ~? ("expected any of: " ++ show expected ++ "\n but got: " ++ show actual)
 
--- USUARIOS
-usuario1 = (1, "Juli")
-usuario2 = (2, "Santi")
-usuario3 = (3, "Luca")
-usuario4 = (4, "Diego")
-usuario5 = (5, "Diego")
--- mas usuarios
-usuario6 = (6, "Juan")
-usuario7 = (7, "Pedro")
-usuario8 = (8, "Pablo")
-usuario9 = (9, "Maria")
-usuario10 = (10, "Ana")
-usuario11 = (11, "Sofia")
-usuario12 = (12, "Florencia")
 
-usuariosA = [usuario1, usuario2, usuario3, usuario4]
-
+usuariosA = [usuario1, usuario2, usuario3, usuario4, usuario5]
 
 -- REDES
 redVacia = ([],[],[])
@@ -130,9 +108,9 @@ redUnUsuario = ([usuario1], [], [])
 relacionesA = [(usuario1, usuario2), (usuario3, usuario1), (usuario2, usuario4), (usuario5, usuario3)]
 redA = (usuariosA, relacionesA, [])
 
--- redRepetidos
-usuariosRepetidos = [usuario1, usuario2, usuario3, usuario4, usuario5]
-redRepetidos = (usuariosRepetidos, [], [])
+-- redSinRepetidos
+usuariosSinRepetidos = [usuario1, usuario2, usuario3, usuario4]
+redSinRepetidos = (usuariosSinRepetidos, [], [])
 
 --redSinRelaciones
 redSinRelaciones = (usuariosA, [], [])
@@ -191,30 +169,30 @@ redSinPublicaciones = (usuariosA, [], [])
 publicacionesSinLikes = [publicacion1_5, publicacion1_UnicoUsuario, publicacion2_5,publicacion3_5,publicacion4_5, publicacion5_5]
 redPublicacionesSinLikes = (usuariosA, [], publicacionesSinLikes)
 
--- redPublicacionesDe1 (usuario1 sin publicaciones)
-publicaciones1 = [publicacion2_1, publicacion2_2, publicacion3_1]
-redPublicacionesDe1 = (usuariosA, [], publicaciones1)
-
--- redPublicacionesDe2 (usuario2 con publicaciones)
-publicaciones2 = [publicacion2_1, publicacion2_2, publicacion3_1, publicacion1_4]
+-- redPublicacionesDe2 (usuario1 sin publicaciones)
+publicaciones2 = [publicacion2_1, publicacion2_2, publicacion3_1]
 redPublicacionesDe2 = (usuariosA, [], publicaciones2)
 
--- redPublicacionesDe3 (2 usuarios con misma pub y likes)
-publicacion_igual = (usuario2, "Lorem ipsum dolor sit amet", [usuario5, usuario4])
-publicaciones3 = [publicacion3_1, publicacion1_2, publicacion_igual, publicacion2_2]
+-- redPublicacionesDe3 (usuario2 con publicaciones)
+publicaciones3 = [publicacion2_1, publicacion2_2, publicacion3_1, publicacion1_4]
 redPublicacionesDe3 = (usuariosA, [], publicaciones3)
 
--- redPublicacionesQueLeGustanA1 (usuario1 sin likes)
-publicacionesQueLeGustanA1 = [publicacion2_1, publicacion2_4, publicacion3_1]
-redPublicacionesQueLeGustanA1 = (usuariosA, [], publicacionesQueLeGustanA1)
+-- redPublicacionesDe4 (2 usuarios con misma pub y likes)
+publicacion_igual = (usuario2, "Lorem ipsum dolor sit amet", [usuario5, usuario4])
+publicaciones4 = [publicacion3_1, publicacion1_2, publicacion_igual, publicacion2_2]
+redPublicacionesDe4 = (usuariosA, [], publicaciones4)
 
--- redPublicacionesQueLeGustanA2 (usuario2 con likes)
-publicacionesQueLeGustanAComun = [publicacion1_1, publicacion2_1, publicacion3_4, publicacion3_2]
-redPublicacionesQueLeGustanAComun = (usuariosA, [], publicacionesQueLeGustanAComun)
+-- redLeGustanA2 (usuario1 sin likes)
+publicacionesLeGustanA2 = [publicacion2_1, publicacion2_4, publicacion3_1]
+redLeGustanA2 = (usuariosA, [], publicacionesLeGustanA2)
 
--- redLesGustanLasMismasPublicaciones1 (usuario1 y usuario2 sin likes)
-publicacionesLesGustanLasMismasPublicaciones1 = [publicacion2_1, publicacion2_4, publicacion5_4]
-redLesGustanLasMismasPublicaciones1 = (usuariosA, [], publicacionesLesGustanLasMismasPublicaciones1)
+-- redLeGustanA3 (usuario2 con likes)
+publicacionesLeGustanA3 = [publicacion1_1, publicacion2_1, publicacion3_4, publicacion3_2]
+redLeGustanA3 = (usuariosA, [], publicacionesLeGustanA3)
+
+-- redLesGustanLasMismasPublicaciones2 (usuario1 y usuario2 sin likes)
+publicacionesLesGustanLasMismasPublicaciones2 = [publicacion2_1, publicacion2_4, publicacion5_4]
+redLesGustanLasMismasPublicaciones2 = (usuariosA, [], publicacionesLesGustanLasMismasPublicaciones2)
 
 -- redLesGustanLasMismasPublicaciones3 (compara mismo usuario)
 publicacionesLesGustanLasMismasPublicaciones3 = [publicacion2_2, publicacion2_4, publicacion1_2, publicacion4_4]
@@ -246,6 +224,21 @@ redTieneUnSeguidorFiel5 = (usuariosA, [], publicacionesTieneUnSeguidorFiel5)
 -- redTieneUnSeguidorFiel6 (comun, falso)
 publicacionesTieneUnSeguidorFiel6 = [publicacion5_1, publicacion5_2, publicacion5_3, publicacion5_4]
 redTieneUnSeguidorFiel6 = (usuariosA, [], publicacionesTieneUnSeguidorFiel6)
+
+
+-- USUARIOS
+usuario1 = (1, "Juli")
+usuario2 = (2, "Santi")
+usuario3 = (3, "Luca")
+usuario4 = (4, "Diego")
+usuario5 = (5, "Diego")
+usuario6 = (6, "Juan")
+usuario7 = (7, "Pedro")
+usuario8 = (8, "Pablo")
+usuario9 = (9, "Maria")
+usuario10 = (10, "Ana")
+usuario11 = (11, "Sofia")
+usuario12 = (12, "Florencia")
 
 
 --PUBLIACIONES
